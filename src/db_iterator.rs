@@ -12,6 +12,12 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+// Modifications: Starielora, 22.10.2025
+// - add trivial implementation for DBRawIteratorWithThreadMode::prepare_value:
+//        pub fn prepare_value(&self) -> bool {
+//            unsafe { return ffi::rocksdb_iter_prepare_value(self.inner.as_ptr()); }
+//        }
+
 use crate::{
     db::{DBAccess, DB},
     ffi, Error, ReadOptions, WriteBatch,
@@ -340,6 +346,10 @@ impl<'a, D: DBAccess> DBRawIteratorWithThreadMode<'a, D> {
         } else {
             None
         }
+    }
+
+    pub fn prepare_value(&self) -> bool {
+        unsafe { return ffi::rocksdb_iter_prepare_value(self.inner.as_ptr()); }
     }
 
     /// Returns pair with slice of the current key and current value.

@@ -12,6 +12,14 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+// Modifications: Starielora, 22.10.2025
+// - add trivial implementation for ReadOptions::set_allow_unprepared_value:
+//        pub fn set_allow_unprepared_value(&mut self, v: bool) {
+//            unsafe {
+//                ffi::rocksdb_readoptions_set_allow_unprepared_value(self.inner, bool::from(v));
+//            }
+//        }
+
 use std::ffi::CStr;
 use std::path::Path;
 use std::ptr::{null_mut, NonNull};
@@ -3896,6 +3904,12 @@ impl ReadOptions {
     // TODO add snapshot setting here
     // TODO add snapshot wrapper structs with proper destructors;
     // that struct needs an "iterator" impl too.
+
+    pub fn set_allow_unprepared_value(&mut self, v: bool) {
+        unsafe {
+            ffi::rocksdb_readoptions_set_allow_unprepared_value(self.inner, bool::from(v));
+        }
+    }
 
     /// Specify whether the "data block"/"index block"/"filter block"
     /// read for this iteration should be cached in memory?
